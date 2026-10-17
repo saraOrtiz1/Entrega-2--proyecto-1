@@ -1,5 +1,9 @@
 package deportivo;
 
-public class VerificacionSancion {
+import autenticacion.Socio;
 
+public class VerificacionSancion {
+    public boolean estaHabilitado(Socio socio) {
+        return !SancionDeportiva.estaSuspendido(socio);
+    }
 }

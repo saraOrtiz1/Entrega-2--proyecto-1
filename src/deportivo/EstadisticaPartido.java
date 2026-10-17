@@ -1,5 +1,5 @@
 package deportivo;
 
-public class EstadisticaPartido {
-
+public abstract class EstadisticaPartido {
+ 
 }
