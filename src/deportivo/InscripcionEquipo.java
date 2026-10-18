@@ -11,6 +11,8 @@ public class InscripcionEquipo {
     private int partidosGanados;
     private int partidosEmpatados;
     private int partidosPerdidos;
+    private int golesFavor;
+    private int golesContra;
 
     public InscripcionEquipo(Equipo equipo, List<Socio> nominaHabilitada) {
         this.equipo = equipo;
@@ -20,48 +22,33 @@ public class InscripcionEquipo {
         this.partidosGanados = 0;
         this.partidosEmpatados = 0;
         this.partidosPerdidos = 0;
+        this.golesFavor = 0;
+        this.golesContra = 0;
     }
 
-    public Equipo getEquipo() {
-        return equipo;
-    }
+    public Equipo getEquipo() { return equipo; }
+    public List<Socio> getNominaHabilitada() { return nominaHabilitada; }
+    public int getPuntos() { return puntos; }
+    public int getPartidosJugados() { return partidosJugados; }
+    public int getPartidosGanados() { return partidosGanados; }
+    public int getPartidosEmpatados() { return partidosEmpatados; }
+    public int getPartidosPerdidos() { return partidosPerdidos; }
+    public int getGolesFavor() { return golesFavor; }
+    public int getGolesContra() { return golesContra; }
+    public int getDiferenciaGoles() { return golesFavor - golesContra; }
 
-    public List<Socio> getNominaHabilitada() {
-        return nominaHabilitada;
-    }
-
-    public int getPuntos() {
-        return puntos;
-    }
-
-    public int getPartidosJugados() {
-        return partidosJugados;
-    }
-
-    // Métodos getters faltantes que causaban el error de compilación
-    public int getPartidosGanados() {
-        return partidosGanados;
-    }
-
-    public int getPartidosEmpatados() {
-        return partidosEmpatados;
-    }
-
-    public int getPartidosPerdidos() {
-        return partidosPerdidos;
-    }
-
-    public void registrarResultado(int golesFavor, int golesContra) {
+    public void registrarResultado(int gf, int gc) {
         partidosJugados++;
-        if (golesFavor > golesContra) {
+        golesFavor += gf;
+        golesContra += gc;
+        if (gf > gc) {
             partidosGanados++;
-            puntos += 3; // 3 puntos por victoria en fútbol
-        } else if (golesFavor == golesContra) {
+            puntos += 3;
+        } else if (gf == gc) {
             partidosEmpatados++;
-            puntos += 1; // 1 punto por empate
+            puntos += 1;
         } else {
             partidosPerdidos++;
-            // 0 puntos por derrota
         }
     }
 }
