@@ -1,12 +1,19 @@
 package persistencia;
 
 import autenticacion.Socio;
+import comercio.Compra;
+import comercio.CuentaPuntos;
+import comercio.Producto;
+import comercio.Venta;
+import comercio.VentaCafeteria;
 import deportivo.Deporte;
 import deportivo.Equipo;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -58,5 +65,85 @@ public class AlmacenadorArchivos {
             }
         }
         return equipos;
+    }
+
+    // ---------------------------------------------------------------
+    // Guardado y carga del componente comercial
+    // ---------------------------------------------------------------
+
+    private static PrintWriter abrirParaAgregar(String ruta, boolean agregar) throws Exception {
+        File archivo = new File(ruta);
+        File carpeta = archivo.getParentFile();
+        if (carpeta != null && !carpeta.exists()) {
+            carpeta.mkdirs();
+        }
+        return new PrintWriter(new FileWriter(archivo, agregar));
+    }
+
+    // Formato: tipo;fecha(yyyy-MM-dd HH:mm);comprador;subtotal;total;puntos
+    public static void guardarVenta(String ruta, Venta venta) throws Exception {
+        if (venta == null) {
+            return;
+        }
+        String tipo = (venta instanceof Compra) ? "TIENDA"
+                : (venta instanceof VentaCafeteria) ? "CAFETERIA" : "VENTA";
+        String comprador = (venta.getComprador() == null) ? "" : venta.getComprador().getLogin();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+        try (PrintWriter pw = abrirParaAgregar(ruta, true)) {
+            pw.println(tipo + ";" + sdf.format(venta.getFecha()) + ";" + comprador + ";"
+                    + venta.getSubtotal() + ";" + venta.getTotal() + ";"
+                    + venta.getPuntosFidelidadGenerados());
+        }
+    }
+
+    public static void guardarCompra(String ruta, Compra compra) throws Exception {
+        guardarVenta(ruta, compra);
+    }
+
+    // Formato: nombre;categoria;precio;cantidadDisponible (reescribe el archivo)
+    public static void guardarProductos(String ruta, Collection<Producto> productos) throws Exception {
+        try (PrintWriter pw = abrirParaAgregar(ruta, false)) {
+            if (productos == null) {
+                return;
+            }
+            for (Producto p : productos) {
+                pw.println(p.getNombre() + ";" + p.getCategoria() + ";"
+                        + p.getPrecio() + ";" + p.getCantidadDisponible());
+            }
+        }
+    }
+
+    public static List<Producto> cargarProductos(String ruta) throws Exception {
+        List<Producto> productos = new ArrayList<>();
+        File file = new File(ruta);
+        if (!file.exists()) return productos;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            String linea;
+            while ((linea = br.readLine()) != null) {
+                if (linea.trim().isEmpty() || linea.startsWith("#")) continue;
+                String[] partes = linea.split(";");
+                if (partes.length >= 4) {
+                    productos.add(new Producto(partes[0].trim(), partes[1].trim(),
+                            Double.parseDouble(partes[2].trim()),
+                            Integer.parseInt(partes[3].trim())));
+                }
+            }
+        }
+        return productos;
+    }
+
+    // Formato: loginSocio;saldo (reescribe el archivo)
+    public static void guardarCuentaPuntos(String ruta, Collection<CuentaPuntos> cuentas) throws Exception {
+        try (PrintWriter pw = abrirParaAgregar(ruta, false)) {
+            if (cuentas == null) {
+                return;
+            }
+            for (CuentaPuntos c : cuentas) {
+                String login = (c.getSocio() == null) ? "" : c.getSocio().getLogin();
+                pw.println(login + ";" + c.getSaldo());
+            }
+        }
     }
 }
