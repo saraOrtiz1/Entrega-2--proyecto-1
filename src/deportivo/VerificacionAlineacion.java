@@ -27,6 +27,19 @@ public class VerificacionAlineacion {
         return motivo.toString().trim();
     }
 
+    // Validación contra la nómina oficial registrada en la competencia (InscripcionEquipo)
+    public String verificarNominaCompetencia(InscripcionEquipo inscripcionEquipo, List<Socio> jugadoresAlineados) {
+        StringBuilder motivo = new StringBuilder();
+        List<Socio> nominaOficial = inscripcionEquipo.getNominaHabilitada();
+
+        for (Socio socio : jugadoresAlineados) {
+            if (!nominaOficial.contains(socio)) {
+                motivo.append("El jugador ").append(socio.getNombre()).append(" no está inscrito en la nómina oficial del torneo. ");
+            }
+        }
+        return motivo.toString().trim();
+    }
+
     public boolean verificarNomina(Equipo equipo, List<Socio> jugadores) {
         return jugadores.stream().allMatch(socio -> 
             equipo.getInscripciones().stream()

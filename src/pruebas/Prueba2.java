@@ -59,7 +59,7 @@ public class Prueba2 {
 
         List<Socio> nominaPartido1 = Arrays.asList(s1, s2, s3);
         String motivoPaso2 = verificador.verificarPartido(local, nominaPartido1);
-        System.out.println("Validación previa Partido 1: " + (motivoPaso2.isEmpty() ? "✅ APROBADO (Nómina completa y habilitada)" : "❌ RECHAZADO"));
+        System.out.println("Validación previa Partido 1: " + (motivoPaso2.isEmpty() ? "APROBADO (Nómina completa y habilitada)" : "RECHAZADO"));
 
         // Registrar Partido 1 con marcador 2 - 1 (Local 2, Visitante 1)
         Partido partido1 = new Partido(fechaHaceDias(7), 2, 1);
@@ -103,7 +103,7 @@ public class Prueba2 {
         // Alineación corregida sin el suspendido (s1, s3, s4)
         List<Socio> nominaPartido2Real = Arrays.asList(s1, s3, s4);
         String motivoPaso2Real = verificador.verificarPartido(local, nominaPartido2Real);
-        System.out.println("Partido 2 con alineación corregida (sin sancionados): " + (motivoPaso2Real.isEmpty() ? "✅ APROBADO" : "❌ RECHAZADO"));
+        System.out.println("Partido 2 con alineación corregida (sin sancionados): " + (motivoPaso2Real.isEmpty() ? "APROBADO" : "RECHAZADO"));
 
         // Demostración regla de Tarjeta Roja Directa en el Partido 2
         System.out.println("\n[SIMULACIÓN PARTIDO 2] Durante el juego, Luis Torres (s4) recibe Tarjeta Roja Directa.");
